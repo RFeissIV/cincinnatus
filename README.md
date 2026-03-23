@@ -71,6 +71,7 @@ Trained using Bundle Neural Networks (BuNN) with Taylor-approximated sheaf diffu
 | **BuNN-Taylor** | **0.5705** | **0.460** | **0.786** |
 
 BuNN-Taylor improves over TransE by 22.6% on MRR. To our knowledge, this is the first application of BuNN sheaf neural networks at this scale — the original BuNN paper (Gebhart & Schrater, 2025; arXiv:2502.15476v1) evaluated on benchmark graphs orders of magnitude smaller.
+Both models were evaluated on the same held-out test set. TransE was trained using standard negative sampling; BuNN-Taylor used 500K-node subgraph sampling with approximately 16 passes over the full graph.
 
 ## Domains covered
 
