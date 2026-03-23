@@ -140,7 +140,7 @@ Place these in `~/agronomic-ai/data/`:
 | `kuzu_edges.parquet` | ~261 MB | All 30.8M triples with source and confidence |
 | `sheaf_embeddings.npy` | ~6.3 GB | BuNN-Taylor embeddings (12.3M × 128) |
 
-*Data files will be made available on Zenodo/Figshare. Contact the author for early access.*
+Data files available on Zenodo: https://doi.org/10.5281/zenodo.19195636
 
 ## Usage
 
