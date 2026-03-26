@@ -62,7 +62,9 @@ Current AI tools generate plausible-sounding scientific answers with no sources 
 
 ## Embedding results
 
-Trained using Bundle Neural Networks (BuNN) with Taylor-approximated sheaf diffusion. Due to GPU memory constraints, training used subgraph sampling (500,000 nodes per batch, each node sampled approximately 16 times across the full 12.3M-node graph).
+All 12,331,977 entities were first encoded using [PubMedBERT](https://huggingface.co/pritamdeka/S-PubMedBert-MS-MARCO) (768d, reduced to 128d via IncrementalPCA). This provides domain-aware semantic initialization — entities begin with biomedical language understanding rather than random vectors. These PubMedBERT embeddings served as initialization for all subsequent KGE (TransE, RotatE, ComplEx) and BuNN training.
+
+BuNN training used Taylor-approximated sheaf diffusion over flat vector bundles. Due to GPU memory constraints, training used subgraph sampling (500,000 nodes per batch, each node sampled approximately 16 times across the full 12.3M-node graph) with full-graph inference over all 12.3M nodes.
 
 | Model | MRR | Hits@1 | Hits@10 |
 |-------|-----|--------|---------|
@@ -70,8 +72,9 @@ Trained using Bundle Neural Networks (BuNN) with Taylor-approximated sheaf diffu
 | BuNN-Chebyshev | 0.3067 | 0.198 | 0.563 |
 | **BuNN-Taylor** | **0.5705** | **0.460** | **0.786** |
 
-BuNN-Taylor improves over TransE by 22.6% on MRR. To our knowledge, this is the first application of BuNN sheaf neural networks at this scale — the original BuNN paper (Gebhart & Schrater, 2025; arXiv:2502.15476v1) evaluated on benchmark graphs orders of magnitude smaller.
-Both models were evaluated on the same held-out test set. TransE was trained using standard negative sampling; BuNN-Taylor used 500K-node subgraph sampling with approximately 16 passes over the full graph.
+BuNN-Taylor improves over TransE by 22.6% on MRR. To our knowledge, this is the first application of BuNN sheaf neural networks at this scale — the original BuNN paper (Bamberger et al., ICLR 2025; [arXiv:2405.15540](https://arxiv.org/abs/2405.15540)) evaluated on benchmark graphs orders of magnitude smaller. 
+
+Both models were evaluated on the same held-out test set. TransE was trained using standard negative sampling; BuNN-Taylor used 500K-node subgraph sampling with full-graph inference. BuNN-Chebyshev replaced the Taylor heat kernel with Chebyshev spectral filters (PolyNSD-style) under identical conditions — the Taylor kernel was substantially superior, confirming the design choice in the original BuNN paper.
 
 ## Domains covered
 
@@ -208,7 +211,9 @@ If you use Cincinnatus in your research, please cite:
 
 - **Minnesota Center for Prion Research and Outreach (MNPRO)**, University of Minnesota — computing resources
 - **Amazon Web Services** — GPU rental
-- **Bundle Neural Networks**: Gebhart & Schrater (2025), arXiv:2502.15476v1
+- **PubMedBERT**: pritamdeka/S-PubMedBert-MS-MARCO — semantic initialization for all 12.3M entity embeddings
+- **Bundle Neural Networks**: Bamberger, Barbero, Dong & Bronstein (ICLR 2025; [arXiv:2405.15540](https://arxiv.org/abs/2405.15540))
+- **Sheaf neural network survey**: arXiv:2502.15476v1 — Open Problem 7 (scaling beyond 1M nodes)
 - **Graph-grounded LLM reasoning**: Amayuelas et al. (2025), "Grounding LLM Reasoning with Knowledge Graphs"
 - **Knowledge graph embedding injection**: Coppolillo (2025), arXiv:2505.07554v1 (methodology reference for v2)
 - **Source databases**: CTD, ChEBI, KEGG, PrimeKG, AGROVOC, ECOTOX, PathwayCommons, and all other integrated databases retain their original licenses and attribution requirements
